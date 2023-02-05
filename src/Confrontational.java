@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.Random;
+import java.awt.*;
 
 public class Confrontational extends Tiles {
 	
@@ -29,10 +30,10 @@ public class Confrontational extends Tiles {
 		
 	}
 	
-	public static void randomPokemon(int rand) {
-		System.out.println("we made it here ");
-		if(rand < 13 && rand > -1)
+	public static void randomPokemon(int rand, Graphics g) {
+		if(rand < 13 && rand > -1) 
 			GameBase.mode = GameBase.GameMode.Wild;
+			
 	}
 	
 	

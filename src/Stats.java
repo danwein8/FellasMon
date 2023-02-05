@@ -61,15 +61,15 @@ public abstract class Stats {
 
 		 if(p instanceof SuperRare) {
 			 individualValue = rand.nextInt(31) + 5;
-			 System.out.println("im at super raree");
+			
 		 }
 		 if(p instanceof Rare) {
 			 individualValue = rand.nextInt(31) + 3;
-			 System.out.println("im at raree");
+	
 		 }
 		 if(p instanceof Common) {
 			 individualValue = rand.nextInt(31) + 1;
-			 System.out.println("im at super common");
+	
 		 }
 	}
 	 

@@ -16,6 +16,8 @@ public class Mapper {
 	static Tiles[][] mapSquare;
 	public static ArrayList<String>  mapString = new ArrayList<String>();
 
+	
+
 
 		public Mapper(String fileName, double picToCharacterRatio, int fitToScreen ) throws IOException, NotEnoughTilesError{
 			
@@ -177,8 +179,10 @@ public class Mapper {
 			for (int i=0; i < mapSquare.length; i ++) {
 				for(int j = 0; j < mapSquare[i].length; j++) {
 					cr = mapSquare[i][j];
-					if(cr instanceof Confrontational)
-						Confrontational.randomPokemon(cr.trackSecond(c));
+					if(GameBase.mode != GameBase.GameMode.Wild && GameBase.mode != GameBase.GameMode.Confronted)  {
+						if(cr instanceof Confrontational)
+							Confrontational.randomPokemon(cr.trackSecond(c), g);
+					}
 					cr.draw(g,c);
 					this.defaultDrawers(g);
 					

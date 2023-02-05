@@ -2,16 +2,16 @@ import java.io.IOException;
 
 public class Rare extends Pokemon {
 
-	public Rare(String name,  int level, String type)
+	public Rare(String name,  int level)
 			throws WrongTypeException, IOException {
-		super(name, level, type);
+		super(name, level);
 	
 	}
 	
 	
 	public static void main(String[] args) {
 		try {
-			Pokemon charmander = new Rare("charmander", 2, Pokemon.F);
+			Pokemon charmander = new Rare("charmander", 2);
 			charmander.printMyStats();
 		} catch (WrongTypeException | IOException e) {
 			// TODO Auto-generated catch block

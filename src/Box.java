@@ -32,13 +32,13 @@ public class Box {
 		
 		int x = r.nextInt(xMax - this.starterMapperX) + this.starterMapperX;
 		int y = r.nextInt(yMax - this.starterMapperY) + this.starterMapperY;
-		//System.out.println("chosen box within bounds of " + x + " ," + y);
+	
 		while(!Mapper.mapSquare[x][y].hasWayPoints) {
-			//System.out.println("this occured in response");
+
 			
 			x = r.nextInt(xMax - this.starterMapperX) + this.starterMapperX;
 			y = r.nextInt(yMax - this.starterMapperY) + this.starterMapperY;
-			//System.out.println("chosen box within bounds of " + x + " ," + y);
+
 			if(Mapper.mapSquare[x][y].hasWayPoints) break;
 		}
 		return Mapper.mapSquare[x][y];
@@ -63,16 +63,14 @@ public class Box {
 	 static  Box boxesLoader (int y, int x , Tiles tile) {
 		Box newBox;
 		if((vectori == x|| vectori > Mapper.mapSquare[0].length) && vectorj == y ) vectori = 0;
-		/*System.out.println("x is at : " + x + " and y is at: " + y);
-		System.out.println("are you being called  I " + vectori);
-		System.out.println("are you being called  J " + vectorj);*/
+
 		
 		if(((x >= vectori && y >= initialVectorj) || (y >= vectorj)) && (confrontInstance(tile))) {
 			initialVectori = x;
 			initialVectorj = vectorj;
 			vectori = x + perimeterTotal;
 			vectorj = y + perimeterTotal;
-			//System.out.println("it was activated here");
+	
 	
 			
 			newBox = new Box(y, x);
@@ -81,7 +79,7 @@ public class Box {
 			initialVectorj = vectorj;
 			vectori = x + perimeterTotal;
 			vectorj = y + perimeterTotal;
-			//System.out.println("it was activated here");
+	
 			newBox = new Box(y, x);
 		}
 		else {

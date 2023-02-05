@@ -13,13 +13,12 @@ public class Confronts {
 	static Image vs;
 	static int stepCounter = 0;
 	static int moveIndex = 0;
-	final static int indexTimer = 60;
+	final static int indexTimer = 20;
 	static int[]loc;
 	static boolean alreadyChecked = false;
 	static int screenChanger = 0;
 	static int changerMax = 80;
 	static boolean isWhite;
-	
 	
 	Confronts(){
 		 try {
@@ -33,7 +32,7 @@ public class Confronts {
 		 alreadyChecked = false;
 	}
 	
-	static public void circulator() {
+	static private void circulator() {
 		stepCounter++;
 		if(stepCounter == indexTimer) {
 			moveIndex++;
@@ -41,7 +40,7 @@ public class Confronts {
 		}
 	}
 	
-	static public void screenShift() {
+	static private void screenShift() {
 		screenChanger++;
 		if(screenChanger == changerMax) {
 			screenChanger++;
@@ -51,57 +50,57 @@ public class Confronts {
 	}
 		 
 	 static public void initialConfront(Graphics g, JPanel stuff) {
-		 	circulator();
+		 	circulator();//runs every time to give a sense of time between calls since it runs 1/60 seconds
 		 	screenShift();
 		 	if(GameBase.mode == GameBase.GameMode.Confronted) {
-		 	Enemies ec = enemyconfronting;
-		 	if(moveIndex >=0)
-			g.drawImage(caught, ec.x-Camera.x + (ec.w/2), ec.y-Camera.y - 40, ec.w/2, ec.l/2, stuff);
-			Character c = Character.main;
-			
-			
-			int[] xBound = GameAn.currentMap.getHBounds();
-			int[] yBound = GameAn.currentMap.getVBounds();
-			String enemyArgs = "you fool you must be crazy rolling around here, lets battle, ima have to"
-					+ "	cook you with all my might now, and this does not stop cause i will flame you until the end so prepare";
-			final int letterPerRow = 60;
-			int boxHeight = (enemyArgs.length()/letterPerRow ) + 1;
-			final int rowSize = (int)(GameBase.screenLength * 0.05);//multipy to make it less expensive
-			int xA = (int)(c.x + c.w  - Camera.x - GameBase.screenWidth * 0.25);
-			int yA = c.y + c.l + 10 - Camera.y ;
-			
-			
-			if((int)(c.x - GameBase.screenWidth*0.5 - 50) < xBound[0] ) {
-				xA = (int)(xBound[0] + GameBase.screenWidth*0.25 - Camera.x);
-			}
-			
-			if(c.y +  GameBase.screenWidth/2 + 50 > yBound[1] ) {
-				yA = (int)(yBound[1] - (GameBase.screenLength * 0.9) - Camera.y - 10);
-			}
-			if(moveIndex >=1) {
-				g.fillRect(xA, yA, (GameBase.screenWidth/2) ,rowSize * boxHeight);
-				g.setColor(java.awt.Color.white);
-				g.fillRect(xA + 8, yA + 8 , (int)(GameBase.screenWidth * 0.5 - 16), rowSize  * boxHeight - 16);
-				g.setColor(java.awt.Color.black);
-				g.setFont(new Font("TimesRoman", Font.PLAIN, 22)); 
-			}
-			for(int i =1; i <=  boxHeight && i <= moveIndex - 1; i ++) {
-				if( enemyArgs.length()>= i * letterPerRow  ) {
-				g.drawString(enemyArgs.substring((i-1)*letterPerRow , i * letterPerRow ),
-				xA + 80 , yA + ((int)(GameBase.screenLength * 0.04) * i)) ;
+			 	Enemies ec = enemyconfronting;
+			 	if(moveIndex >=0)
+				g.drawImage(caught, ec.x-Camera.x + (ec.w/2), ec.y-Camera.y - 40, ec.w/2, ec.l/2, stuff);
+				Character c = Character.main;
 				
-				}else {
-					g.drawString(enemyArgs.substring((i-1)*letterPerRow ),
+				
+				int[] xBound = GameAn.currentMap.getHBounds();
+				int[] yBound = GameAn.currentMap.getVBounds();
+				String enemyArgs = "you fool you must be crazy rolling around here, lets battle, ima have to"
+						+ "	cook you with all my might now, and this does not stop cause i will flame you until the end so prepare";
+				final int letterPerRow = 60;
+				int boxHeight = (enemyArgs.length()/letterPerRow ) + 1;
+				final int rowSize = (int)(GameBase.screenLength * 0.05);//multipy to make it less expensive
+				int xA = (int)(c.x + c.w  - Camera.x - GameBase.screenWidth * 0.25);//initialize starting point a one quarter of scree starting from left
+				int yA = c.y + c.l + 10 - Camera.y ;//initially to to start from lover under character section
+				
+				
+				if((int)(c.x - GameBase.screenWidth*0.5 - 50) < xBound[0] ) {// if near bounds we will have to reidentify how we are measuring the begining
+					xA = (int)(xBound[0] + GameBase.screenWidth*0.25 - Camera.x);
+				}
+				
+				if(c.y +  GameBase.screenWidth/2 + 50 > yBound[1] ) {
+					yA = (int)(yBound[1] - (GameBase.screenLength * 0.9) - Camera.y - 10);
+				}
+				if(moveIndex >=1) { // creates rectangle inside rect for design purposes
+					g.fillRect(xA, yA, (GameBase.screenWidth/2) ,rowSize * boxHeight);
+					g.setColor(java.awt.Color.white);
+					g.fillRect(xA + 8, yA + 8 , (int)(GameBase.screenWidth * 0.5 - 16), rowSize  * boxHeight - 16);
+					g.setColor(java.awt.Color.black);
+					g.setFont(new Font("TimesRoman", Font.PLAIN, 22)); 
+				}
+				for(int i =1; i <=  boxHeight && i <= moveIndex - 1; i ++) {
+					if( enemyArgs.length()>= i * letterPerRow  ) {
+					g.drawString(enemyArgs.substring((i-1)*letterPerRow , i * letterPerRow ),
 					xA + 80 , yA + ((int)(GameBase.screenLength * 0.04) * i)) ;
+					
+					}else {
+						g.drawString(enemyArgs.substring((i-1)*letterPerRow ),
+						xA + 80 , yA + ((int)(GameBase.screenLength * 0.04) * i)) ;
+					}
 				}
-			}
-			
-			if(moveIndex >=6) {
-				if(isWhite)GameBase.panel.setBackground(Color.white);
-				else GameBase.panel.setBackground(Color.black);
+				//screen flicker
+				if(moveIndex >=6) {
+					if(isWhite)GameBase.panel.setBackground(Color.white);
+					else GameBase.panel.setBackground(Color.black);
+					
+					}
 				
-				}
-			
 		 	}
 			
 			if(moveIndex >=7 && GameBase.mode == GameBase.GameMode.Confronted || GameBase.mode == GameBase.GameMode.Wild) {
@@ -112,14 +111,6 @@ public class Confronts {
 				int colLooperS = loc[1] - fc;
 				int rowLooperF = loc[0] + fc;
 				int colLooperF = loc[1] + fc;
-				if(rowLooperS < 0 )
-					rowLooperS = 0;
-				if(rowLooperF >  GameAn.currentMap.mapSquare.length)
-					rowLooperF = GameAn.currentMap.mapSquare.length;
-				if(colLooperS < 0 )
-					colLooperS = 0;
-				if(colLooperF >  GameAn.currentMap.mapSquare[0].length)
-					rowLooperF = GameAn.currentMap.mapSquare[0].length;
 				Tiles cS;
 				int counter = 0;
 				for(int i = 0; i < GameAn.currentMap.mapSquare.length; i++) {
@@ -138,19 +129,34 @@ public class Confronts {
 							}
 						}
 					}
+				if(GameBase.mode != GameBase.GameMode.Confronted) {
+					if(isWhite)GameBase.panel.setBackground(Color.white);
+					else GameBase.panel.setBackground(Color.red);
+					if(moveIndex >= 4) {
+						GameBase.mode =  GameBase.GameMode.Battle;
+						Battle_UI_Screen.updateBM();
+						BattleBox.currentInstance.LoadBattle();
+						moveIndex = 0;
+					}
+	
+				}else {
+					if(moveIndex >= 12) {
+						GameBase.mode = GameBase.GameMode.Battle;
+						Battle_UI_Screen.updateBM();
+						BattleBox.currentInstance.LoadBattle();
+						moveIndex = 0;
+					}
+						
+				}
+				
+				
+				
 			}
 			
 			
 				
 			}
 			
-			
-		
-
-	 
-	 		
-			
-		
 		
 		public void WipeScreen(GameBase.GameMode mode) throws SwithModeError{
 			if(mode != GameBase.GameMode.Confronted) 

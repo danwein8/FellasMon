@@ -10,11 +10,13 @@ public abstract class GameBase extends JFrame implements  KeyListener, Runnable 
 	static myPanel panel;
 	int mover = -1;
 	boolean shiftOn; 
+	static SoundManager sm = new SoundManager();
 	static enum GameMode{
 		Jorney,
 		Battle,
 		Confronted,
-		Wild
+		Wild,
+		Menu
 	};
 	
 	static GameMode mode = GameMode.Jorney;
@@ -115,6 +117,7 @@ public abstract class GameBase extends JFrame implements  KeyListener, Runnable 
 					 DisplayMode.REFRESH_RATE_UNKNOWN);
 		t.start();
 		this.addKeyListener(this);
+		panel.setDoubleBuffered(true);
 	
 	}
 	
@@ -208,14 +211,17 @@ public abstract class GameBase extends JFrame implements  KeyListener, Runnable 
 		if(shiftOn) return Character.shiftVal + val;
 		return val;
 	}
+	
+	abstract public void  screenAdder(KeyEvent s);
 
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		//2D code for running and jumping, now implementing 3D
-		if(mode == GameMode.Jorney) {
 		int s = Character.shiftVal;
 		int k = shiftOn?e.getKeyCode() + s: e.getKeyCode();
+		this.screenAdder(e);
+		if(mode == GameMode.Jorney) {
 		if(k != mover) this.c[0].getActionImage(k);//perform animation
 		if(!shiftOn && SHFT == k) shiftOn = true;
 		if (k == LT || k == LT + s )mover = shiftOn(LT);
@@ -226,8 +232,10 @@ public abstract class GameBase extends JFrame implements  KeyListener, Runnable 
 			if(mover == -1)mover = 0;
 			mover = mover + SPACE;
 			mover = shiftOn(mover);
+		
 		}
 		}
+		
 		
 	}
 		

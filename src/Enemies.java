@@ -25,6 +25,7 @@ public class Enemies extends Character {
 	static int eneyMovingSpeed;
 	static Random r = new Random();
 	HashMap<String, HashMap<String, Integer>> actions = new HashMap<>();
+	boolean willConfront = true;
 	
 	
 
@@ -40,6 +41,8 @@ public class Enemies extends Character {
 		this.loadActionHashMap();
 		this.getActionImage(actions.get(actionState[currentState])
 				.get("animation"));
+		
+	
 
 	}
 	
@@ -76,9 +79,7 @@ public class Enemies extends Character {
 				cS.equals(actionState[4]) ||
 					cS.equals(actionState[5])) &&
 						Math.abs(protaganist.y - this.y)<= 15 ) {
-			System.out.println("are we here xxxxx");
-			System.out.println(actions.get(cS).get("animation"));
-			System.out.print("heres is out x " + protaganist.x + " and here is the other " + this.x);
+	
 			return (((actions.get(cS).get("animation") == LT) && 
 					(protaganist.x - this.x > -(GameAn.currentMap.getTilesWidth())&&
 							protaganist.x - this.x <= 0)) ||
@@ -91,9 +92,7 @@ public class Enemies extends Character {
 				cS.equals(actionState[2]) ||
 					cS.equals(actionState[3])) &&
 						Math.abs(protaganist.x - this.x)<= 15 ) {
-			System.out.println("are we here yyyyyyyy");
-			System.out.println(actions.get(cS).get("animation"));
-			System.out.print("heres is out y " + protaganist.y + " and here is the other " + this.y);
+		
 			return (((actions.get(cS).get("animation") == UP) && 
 					(protaganist.y - this.y > -(GameAn.currentMap.getTileHeight())&&
 							protaganist.y - this.y <= 0)) ||
@@ -219,28 +218,28 @@ public class Enemies extends Character {
 			this.vy = 0;
 		}
 		
-		if(this.confrontCharacter(cS)) {
+		if(this.confrontCharacter(cS) && willConfront) {
 			Confronts.enemyconfronting = this;
+			willConfront = false;
 			GameBase.mode = GameBase.GameMode.Confronted;
 			
 		}
 		
-		//System.out.println(" this is the speed " + this.vx);
-		//this.getActionImage(this.actions.get(actionState[this.currentState]).get("animation"));
+		
 		this.moveVelocityBased();
 		this.vx = 0;
 		this.vy = 0;
-		
-		//System.out.println(" -----------" + this.vx);
+
 		}
 	}
+	
 	
 	
 	
 	public void performActionImage(Graphics g, JPanel stuff) {
 
 		this.performAction();
-		//System.out.println(this.actionState[currentState]);
+
 		Image image;
 		
 		if(moving) {

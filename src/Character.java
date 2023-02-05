@@ -9,8 +9,8 @@ public class Character extends Rect {
 	
 	//************************** CONSTANTS*****************************
 	final static int shiftVal = 1000;
-	final static int run = 8;
-	final static int walk = 2;
+	final static int run = 14;
+	final static int walk = 4;
 	final static int jumpTime = 20;
 	final static int gravity = 3;
 	final static int  jumpIni = jumpTime - gravity;
@@ -25,6 +25,8 @@ public class Character extends Rect {
 	boolean moving = false;
 	public static int speedVal;
 	static Character main;
+	
+	
 	
 	//air Values
 	boolean inAir = false;

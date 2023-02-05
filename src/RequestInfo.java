@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public class RequestInfo {
 
 	private static final String USER_AGENT = "Mozilla/5.0";
 
-	private static final String GET_URL = "https://pokemondb.net/pokedex/";
+	private static final String GET_URL = "https://pokemondb.net/";
 
 	
 
@@ -22,6 +23,9 @@ public class RequestInfo {
 		Map<String, Integer> bro = getBaseStats("charmander");
 		Map<String, Map<String, String>> baseStatsMap = getAllAttacks();
 		Map<Integer, String> something = getAttacks("charmander");
+		ArrayList<String[]> laako = listOfFellasInArea("route-1");
+		String some = type("charmander");
+	
 		
 		
 
@@ -46,7 +50,7 @@ public class RequestInfo {
 
 			return response.toString();
 		} else {
-			System.out.println("GET request did not work.");
+		
 			return "";
 		}
 
@@ -55,7 +59,7 @@ public class RequestInfo {
 	
 	
 	static Map<String, Integer>getBaseStats(String pokemon) throws IOException {
-		String s = sendGET(pokemon);
+		String s = sendGET("pokedex/" + pokemon);
 		Map<String, Integer> baseStatsMap = new HashMap<String, Integer>();
 		int occurence =  s.indexOf("<h2>Base stats</h2>");
 		occurence =  s.indexOf("<tr>", occurence);
@@ -76,19 +80,33 @@ public class RequestInfo {
 			occurence = s.indexOf("<tr>", endTd);
 			
 		}
-		
-		baseStatsMap.entrySet().stream().forEach(input ->
-		System.out.println(input.getKey() + " : "
-				 + input.getValue())
-	);
-		
+				
 		return baseStatsMap;
 		
 	}
 	
+
+	static String type(String pokemon) throws IOException {
+		String s = sendGET("pokedex/" + pokemon);
+		int oc = s.indexOf("<h2>Pokédex data</h2>");
+		int normalTagLength = "href=\"/type/".length();
+
+		
+		int initialTh = s.indexOf("href=\"/type/", oc);
+		int endTh = s.indexOf("\">",initialTh);
+			
+			
+		
+		
+		return s.substring(initialTh + normalTagLength, endTh);
+		
+	}
+	
+	
+	
 	
 	static Map<Integer, String> getAttacks(String pokemon) throws IOException {
-		String s = sendGET(pokemon);
+		String s = sendGET("pokedex/" + pokemon);
 		Map<Integer, String> learnLevelAttack = new HashMap<Integer, String>();
 		int occurence =  s.indexOf("<h3>Moves learnt by level up</h3");
 		occurence =  s.indexOf("<tr>", occurence);
@@ -122,9 +140,7 @@ public class RequestInfo {
 		}
 		
 
-		learnLevelAttack.entrySet().stream().forEach(input ->
-		System.out.println(input.getKey() + " : "
-				 + input.getValue()));
+	
 
 		
 		return learnLevelAttack;
@@ -133,20 +149,8 @@ public class RequestInfo {
 	
 	static Map<String, Map<String, String>>getAllAttacks() throws IOException {
 		URL obj = new URL("https://pokemondb.net/move/all");
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		con.setRequestMethod("GET");
-		con.setRequestProperty("User-Agent", USER_AGENT);
-		int responseCode = con.getResponseCode();
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuffer response = new StringBuffer();
-
-			while ((inputLine = in.readLine()) != null) {
-				response.append("\n" + inputLine);
-			}
-			
-			in.close();
-		String s = response.toString();
+		
+		String s = sendGET("move/all");
 		Map<String, Map<String, String>> baseStatsMap = new HashMap<String, Map<String, String>>();
 		int occurence =  s.indexOf("<tbody>");
 		occurence =  s.indexOf("<tr>", occurence);
@@ -172,19 +176,51 @@ public class RequestInfo {
 			specificAtkMap.put("type", s.substring(initialT + typeLength, endT - 1));
 			baseStatsMap.put(s.substring(initialM + moveLength, endM - 2),specificAtkMap );
 			occurence =  s.indexOf("<tr>", endP);
-			System.out.println(s.substring(initialP + otherTagLength, endP));
+
 
 			
 		}
 		
-		baseStatsMap.entrySet().stream().forEach(input ->
-		System.out.println(input.getKey() + " : "
-				 + input.getValue().get("power") + " : " + 
-				 input.getValue().get("type"))
-	);
+	
 		
 		return baseStatsMap;
 		
+	}
+	
+	
+	static ArrayList<String[]>  listOfFellasInArea(String loc) throws IOException {
+		String s = sendGET("location/kanto-" + loc);
+		ArrayList<String[]> randomer = new ArrayList<String[]>();
+		int occurence =  s.indexOf("id=\"gen4\"");
+		occurence =  s.indexOf("<tbody>", occurence);
+		int initialName = 0;
+		int endName = 0;
+		int initialLvs = 0;
+		int endLvs = 0;
+		
+		int nameLength = "href=\\\"/pokedex/".length() - 1;
+		int levelLength = "cell-num\\\">".length() - 1;
+
+		Integer val;
+		for(int i = 0; i < 22; i++) {
+			initialName = s.indexOf("href=\"/pokedex/", occurence);
+			endName = s.indexOf("\" title", initialName + 1);
+			initialLvs = s.indexOf("cell-num\">", occurence);
+			endLvs = s.indexOf("</td>", initialLvs + 1);
+	
+			try {
+				String[] newArr = { s.substring(initialName + nameLength, endName), s.substring(initialLvs + levelLength, endLvs )};
+				randomer.add(newArr);
+			}catch(Exception e) {
+				
+			}
+			
+			occurence = s.indexOf("<tr>", endLvs);
+			
+		}
+		
+		
+		return randomer;
 	}
 
 	
